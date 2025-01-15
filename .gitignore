@@ -45,6 +45,7 @@ test-output
 
 # local env files
 .env*.local
+.env.development
 
 # vercel
 .vercel

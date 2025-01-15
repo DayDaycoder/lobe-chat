@@ -6,6 +6,7 @@ import Casdoor from './casdoor';
 import CloudflareZeroTrust from './cloudflare-zero-trust';
 import GenericOIDC from './generic-oidc';
 import Github from './github';
+import Hy4a from './hy4a';
 import Logto from './logto';
 import MicrosoftEntraID from './microsoft-entra-id';
 import Zitadel from './zitadel';
@@ -22,4 +23,6 @@ export const ssoProviders = [
   CloudflareZeroTrust,
   Casdoor,
   MicrosoftEntraID,
+  // 自有4A SSO
+  Hy4a,
 ];

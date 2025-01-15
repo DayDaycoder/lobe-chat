@@ -18,17 +18,24 @@ export const initSSOProviders = () => {
 };
 
 // Notice this is only an object, not a full Auth.js instance
+// @ts-ignore
 export default {
   callbacks: {
     // Note: Data processing order of callback: authorize --> jwt --> session
     async jwt({ token, user }) {
+      console.log('[NextAuth] jwt callback', { token, user });
       // ref: https://authjs.dev/guides/extending-the-session#with-jwt
       if (user?.id) {
         token.userId = user?.id;
       }
       return token;
     },
+    async redirect({ url, baseUrl }) {
+      console.log('[NextAuth] redirect callback', url, baseUrl);
+      return url.startsWith(baseUrl) ? url : baseUrl;
+    },
     async session({ session, token, user }) {
+      console.log('[NextAuth] session callback', { session, token, user });
       if (session.user) {
         // ref: https://authjs.dev/guides/extending-the-session#with-database
         if (user) {
@@ -40,6 +47,7 @@ export default {
       return session;
     },
   },
+  // @ts-ignore
   providers: initSSOProviders(),
   redirectProxyUrl: process.env.APP_URL ? urlJoin(process.env.APP_URL, '/api/auth') : undefined,
   secret: authEnv.NEXT_AUTH_SECRET,

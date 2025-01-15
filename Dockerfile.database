@@ -8,7 +8,7 @@ ENV DEBIAN_FRONTEND="noninteractive"
 RUN \
     # If you want to build docker in China, build with --build-arg USE_CN_MIRROR=true
     if [ "${USE_CN_MIRROR:-false}" = "true" ]; then \
-        sed -i "s/deb.debian.org/mirrors.ustc.edu.cn/g" "/etc/apt/sources.list.d/debian.sources"; \
+        sed -i "s/deb.debian.org/mirrors.aliyun.com/g" "/etc/apt/sources.list.d/debian.sources"; \
     fi \
     # Add required package
     && apt update \

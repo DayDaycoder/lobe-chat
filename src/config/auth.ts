@@ -38,6 +38,11 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
+
+      // HY4A
+      HY4A_CLIENT_ID?: string;
+      HY4A_CLIENT_SECRET?: string;
+      HY4A_ISSUER?: string;
     }
   }
 }
@@ -136,6 +141,15 @@ export const getAuthConfig = () => {
   if (process.env.ZITADEL_ISSUER) {
     console.warn(removeTipsTemplate('ZITADEL_ISSUER', 'AUTH_ZITADEL_ISSUER'));
   }
+  if (process.env.HY4A_CLIENT_ID) {
+    console.warn(removeTipsTemplate('HY4A_CLIENT_ID', 'AUTH_HY4A_ID'));
+  }
+  if (process.env.HY4A_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('HY4A_CLIENT_SECRET', 'AUTH_HY4A_SECRET'));
+  }
+  if (process.env.HY4A_ISSUER) {
+    console.warn(removeTipsTemplate('HY4A_ISSUER', 'AUTH_HY4A_ISSUER'));
+  }
   // End
 
   return createEnv({
@@ -204,6 +218,11 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: z.string().optional(),
+
+      // HY4A
+      HY4A_CLIENT_ID: z.string().optional(),
+      HY4A_CLIENT_SECRET: z.string().optional(),
+      HY4A_ISSUER: z.string().optional(),
     },
 
     runtimeEnv: {
@@ -265,6 +284,11 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
+
+      // HY4A
+      HY4A_CLIENT_ID: process.env.HY4A_CLIENT_ID,
+      HY4A_CLIENT_SECRET: process.env.HY4A_CLIENT_SECRET,
+      HY4A_ISSUER: process.env.HY4A_ISSUER,
     },
   });
 };
