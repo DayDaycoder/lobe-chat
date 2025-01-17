@@ -36,6 +36,7 @@ enum HarmCategory {
 
 enum HarmBlockThreshold {
   BLOCK_NONE = 'BLOCK_NONE',
+  OFF = 'OFF', // https://discuss.ai.google.dev/t/59352
 }
 
 export class LobeGoogleAI implements LobeRuntimeAI {
@@ -70,19 +71,19 @@ export class LobeGoogleAI implements LobeRuntimeAI {
             safetySettings: [
               {
                 category: HarmCategory.HARM_CATEGORY_HATE_SPEECH,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_SEXUALLY_EXPLICIT,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_HARASSMENT,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
               {
                 category: HarmCategory.HARM_CATEGORY_DANGEROUS_CONTENT,
-                threshold: HarmBlockThreshold.BLOCK_NONE,
+                threshold: model.includes('2.0') ? (HarmBlockThreshold.OFF as any) : HarmBlockThreshold.BLOCK_NONE,
               },
             ],
           },
@@ -288,13 +289,18 @@ export class LobeGoogleAI implements LobeRuntimeAI {
   private convertToolToGoogleTool = (tool: ChatCompletionTool): FunctionDeclaration => {
     const functionDeclaration = tool.function;
     const parameters = functionDeclaration.parameters;
+    // refs: https://github.com/lobehub/lobe-chat/pull/5002
+    const properties =
+      parameters?.properties && Object.keys(parameters.properties).length > 0
+        ? parameters.properties
+        : { dummy: { type: 'string' } }; // dummy property to avoid empty object
 
     return {
       description: functionDeclaration.description,
       name: functionDeclaration.name,
       parameters: {
         description: parameters?.description,
-        properties: parameters?.properties,
+        properties: properties,
         required: parameters?.required,
         type: SchemaType.OBJECT,
       },

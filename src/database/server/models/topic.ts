@@ -1,10 +1,17 @@
-import { Column, count, inArray, sql } from 'drizzle-orm';
-import { and, desc, eq, exists, isNull, like, or } from 'drizzle-orm/expressions';
+import { Column, count, sql } from 'drizzle-orm';
+import { and, desc, eq, exists, gt, inArray, isNull, like, or } from 'drizzle-orm/expressions';
 
 import { LobeChatDatabase } from '@/database/type';
+import {
+  genEndDateWhere,
+  genRangeWhere,
+  genStartDateWhere,
+  genWhere,
+} from '@/database/utils/genWhere';
+import { idGenerator } from '@/database/utils/idGenerator';
+import { TopicRankItem } from '@/types/topic';
 
 import { NewMessage, TopicItem, messages, topics } from '../../schemas';
-import { idGenerator } from '@/database/utils/idGenerator';
 
 export interface CreateTopicParams {
   favorite?: boolean;
@@ -29,9 +36,8 @@ export class TopicModel {
   }
   // **************** Query *************** //
 
-  async query({ current = 0, pageSize = 9999, sessionId }: QueryTopicParams = {}) {
+  query = async ({ current = 0, pageSize = 9999, sessionId }: QueryTopicParams = {}) => {
     const offset = current * pageSize;
-
     return (
       this.db
         .select({
@@ -51,24 +57,23 @@ export class TopicModel {
         .limit(pageSize)
         .offset(offset)
     );
-  }
+  };
 
-  async findById(id: string) {
+  findById = async (id: string) => {
     return this.db.query.topics.findFirst({
       where: and(eq(topics.id, id), eq(topics.userId, this.userId)),
     });
-  }
+  };
 
-  async queryAll(): Promise<TopicItem[]> {
+  queryAll = async (): Promise<TopicItem[]> => {
     return this.db
       .select()
       .from(topics)
       .orderBy(topics.updatedAt)
-      .where(eq(topics.userId, this.userId))
-      .execute();
-  }
+      .where(eq(topics.userId, this.userId));
+  };
 
-  async queryByKeyword(keyword: string, sessionId?: string | null): Promise<TopicItem[]> {
+  queryByKeyword = async (keyword: string, sessionId?: string | null): Promise<TopicItem[]> => {
     if (!keyword) return [];
 
     const keywordLowerCase = keyword.toLowerCase();
@@ -92,26 +97,59 @@ export class TopicModel {
         ),
       ),
     });
-  }
+  };
 
-  async count() {
+  count = async (params?: {
+    endDate?: string;
+    range?: [string, string];
+    startDate?: string;
+  }): Promise<number> => {
     const result = await this.db
       .select({
-        count: count(),
+        count: count(topics.id),
       })
       .from(topics)
-      .where(eq(topics.userId, this.userId))
-      .execute();
+      .where(
+        genWhere([
+          eq(topics.userId, this.userId),
+          params?.range
+            ? genRangeWhere(params.range, topics.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.endDate
+            ? genEndDateWhere(params.endDate, topics.createdAt, (date) => date.toDate())
+            : undefined,
+          params?.startDate
+            ? genStartDateWhere(params.startDate, topics.createdAt, (date) => date.toDate())
+            : undefined,
+        ]),
+      );
 
     return result[0].count;
-  }
+  };
+
+  rank = async (limit: number = 10): Promise<TopicRankItem[]> => {
+    return this.db
+      .select({
+        count: count(messages.id).as('count'),
+        id: topics.id,
+        sessionId: topics.sessionId,
+        title: topics.title,
+      })
+      .from(topics)
+      .where(and(eq(topics.userId, this.userId)))
+      .leftJoin(messages, eq(topics.id, messages.topicId))
+      .groupBy(topics.id)
+      .orderBy(desc(sql`count`))
+      .having(({ count }) => gt(count, 0))
+      .limit(limit);
+  };
 
   // **************** Create *************** //
 
-  async create(
+  create = async (
     { messages: messageIds, ...params }: CreateTopicParams,
     id: string = this.genId(),
-  ): Promise<TopicItem> {
+  ): Promise<TopicItem> => {
     return this.db.transaction(async (tx) => {
       // 在 topics 表中插入新的 topic
       const [topic] = await tx
@@ -133,9 +171,9 @@ export class TopicModel {
 
       return topic;
     });
-  }
+  };
 
-  async batchCreate(topicParams: (CreateTopicParams & { id?: string })[]) {
+  batchCreate = async (topicParams: (CreateTopicParams & { id?: string })[]) => {
     // 开始一个事务
     return this.db.transaction(async (tx) => {
       // 在 topics 表中批量插入新的 topics
@@ -167,9 +205,9 @@ export class TopicModel {
 
       return createdTopics;
     });
-  }
+  };
 
-  async duplicate(topicId: string, newTitle?: string) {
+  duplicate = async (topicId: string, newTitle?: string) => {
     return this.db.transaction(async (tx) => {
       // find original topic
       const originalTopic = await tx.query.topics.findFirst({
@@ -217,48 +255,48 @@ export class TopicModel {
         topic: duplicatedTopic,
       };
     });
-  }
+  };
 
   // **************** Delete *************** //
 
   /**
    * Delete a session, also delete all messages and topics associated with it.
    */
-  async delete(id: string) {
+  delete = async (id: string) => {
     return this.db.delete(topics).where(and(eq(topics.id, id), eq(topics.userId, this.userId)));
-  }
+  };
 
   /**
    * Deletes multiple topics based on the sessionId.
    */
-  async batchDeleteBySessionId(sessionId?: string | null) {
+  batchDeleteBySessionId = async (sessionId?: string | null) => {
     return this.db
       .delete(topics)
       .where(and(this.matchSession(sessionId), eq(topics.userId, this.userId)));
-  }
+  };
 
   /**
    * Deletes multiple topics and all messages associated with them in a transaction.
    */
-  async batchDelete(ids: string[]) {
+  batchDelete = async (ids: string[]) => {
     return this.db
       .delete(topics)
       .where(and(inArray(topics.id, ids), eq(topics.userId, this.userId)));
-  }
+  };
 
-  async deleteAll() {
+  deleteAll = async () => {
     return this.db.delete(topics).where(eq(topics.userId, this.userId));
-  }
+  };
 
   // **************** Update *************** //
 
-  async update(id: string, data: Partial<TopicItem>) {
+  update = async (id: string, data: Partial<TopicItem>) => {
     return this.db
       .update(topics)
       .set({ ...data, updatedAt: new Date() })
       .where(and(eq(topics.id, id), eq(topics.userId, this.userId)))
       .returning();
-  }
+  };
 
   // **************** Helper *************** //
 

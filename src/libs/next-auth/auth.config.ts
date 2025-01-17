@@ -1,5 +1,4 @@
 import type { NextAuthConfig } from 'next-auth';
-import urlJoin from 'url-join';
 
 import { authEnv } from '@/config/auth';
 
@@ -23,7 +22,7 @@ export default {
   callbacks: {
     // Note: Data processing order of callback: authorize --> jwt --> session
     async jwt({ token, user }) {
-      console.log('[NextAuth] jwt callback', { token, user });
+      // console.log('[NextAuth] jwt callback', { token, user });
       // ref: https://authjs.dev/guides/extending-the-session#with-jwt
       if (user?.id) {
         token.userId = user?.id;
@@ -31,11 +30,11 @@ export default {
       return token;
     },
     async redirect({ url, baseUrl }) {
-      console.log('[NextAuth] redirect callback', url, baseUrl);
+      // console.log('[NextAuth] redirect callback', url, baseUrl);
       return url.startsWith(baseUrl) ? url : baseUrl;
     },
     async session({ session, token, user }) {
-      console.log('[NextAuth] session callback', { session, token, user });
+      // console.log('[NextAuth] session callback', { session, token, user });
       if (session.user) {
         // ref: https://authjs.dev/guides/extending-the-session#with-database
         if (user) {
@@ -48,8 +47,8 @@ export default {
     },
   },
   // @ts-ignore
+  debug: authEnv.NEXT_AUTH_DEBUG,
   providers: initSSOProviders(),
-  redirectProxyUrl: process.env.APP_URL ? urlJoin(process.env.APP_URL, '/api/auth') : undefined,
   secret: authEnv.NEXT_AUTH_SECRET,
   trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,
 } satisfies NextAuthConfig;

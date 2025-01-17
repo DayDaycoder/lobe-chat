@@ -16,9 +16,11 @@ import { LobeGiteeAI } from './giteeai';
 import { LobeGithubAI } from './github';
 import { LobeGoogleAI } from './google';
 import { LobeGroq } from './groq';
+import { LobeHigressAI } from './higress';
 import { LobeHuggingFaceAI } from './huggingface';
 import { LobeHunyuanAI } from './hunyuan';
 import { LobeInternLMAI } from './internlm';
+import { LobeLMStudioAI } from './lmstudio';
 import { LobeMinimaxAI } from './minimax';
 import { LobeMistralAI } from './mistral';
 import { LobeMoonshotAI } from './moonshot';
@@ -132,7 +134,7 @@ class AgentRuntime {
       ai21: Partial<ClientOptions>;
       ai360: Partial<ClientOptions>;
       anthropic: Partial<ClientOptions>;
-      azure: { apiVersion?: string; apikey?: string; endpoint?: string };
+      azure: { apiKey?: string; apiVersion?: string; baseURL?: string };
       baichuan: Partial<ClientOptions>;
       bedrock: Partial<LobeBedrockAIParams>;
       cloudflare: Partial<LobeCloudflareParams>;
@@ -142,9 +144,11 @@ class AgentRuntime {
       github: Partial<ClientOptions>;
       google: { apiKey?: string; baseURL?: string };
       groq: Partial<ClientOptions>;
+      higress: Partial<ClientOptions>;
       huggingface: { apiKey?: string; baseURL?: string };
       hunyuan: Partial<ClientOptions>;
       internlm: Partial<ClientOptions>;
+      lmstudio: Partial<ClientOptions>;
       minimax: Partial<ClientOptions>;
       mistral: Partial<ClientOptions>;
       moonshot: Partial<ClientOptions>;
@@ -178,8 +182,8 @@ class AgentRuntime {
 
       case ModelProvider.Azure: {
         runtimeModel = new LobeAzureOpenAI(
-          params.azure?.endpoint,
-          params.azure?.apikey,
+          params.azure?.baseURL,
+          params.azure?.apiKey,
           params.azure?.apiVersion,
         );
         break;
@@ -202,6 +206,11 @@ class AgentRuntime {
 
       case ModelProvider.Bedrock: {
         runtimeModel = new LobeBedrockAI(params.bedrock);
+        break;
+      }
+
+      case ModelProvider.LMStudio: {
+        runtimeModel = new LobeLMStudioAI(params.lmstudio);
         break;
       }
 
@@ -331,7 +340,7 @@ class AgentRuntime {
       }
 
       case ModelProvider.SenseNova: {
-        runtimeModel = await LobeSenseNovaAI.fromAPIKey(params.sensenova);
+        runtimeModel = new LobeSenseNovaAI(params.sensenova);
         break;
       }
 
@@ -347,6 +356,11 @@ class AgentRuntime {
 
       case ModelProvider.InternLM: {
         runtimeModel = new LobeInternLMAI(params.internlm);
+        break;
+      }
+
+      case ModelProvider.Higress: {
+        runtimeModel = new LobeHigressAI(params.higress);
         break;
       }
     }

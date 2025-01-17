@@ -9,6 +9,7 @@ import Github from './github';
 import Hy4a from './hy4a';
 import Logto from './logto';
 import MicrosoftEntraID from './microsoft-entra-id';
+import WeChat from './wechat';
 import Zitadel from './zitadel';
 
 export const ssoProviders = [
@@ -25,4 +26,5 @@ export const ssoProviders = [
   MicrosoftEntraID,
   // 自有4A SSO
   Hy4a,
+  WeChat,
 ];
