@@ -31,7 +31,7 @@
   "batchDelete": "Usuń wiele",
   "blog": "Blog produktowy",
   "branching": "Utwórz podtemat",
-  "branchingDisable": "Funkcja „podtemat” jest dostępna tylko w wersji serwerowej. Aby skorzystać z tej funkcji, przełącz się na tryb wdrożenia serwera lub użyj LobeChat Cloud.",
+  "branchingDisable": "Funkcja „podtemat” jest dostępna tylko w wersji serwerowej. Aby skorzystać z tej funkcji, przełącz się na tryb wdrożenia serwera lub użyj 和祐小助手 Cloud.",
   "cancel": "Anuluj",
   "changelog": "Dziennik zmian",
   "clientDB": {
@@ -119,7 +119,7 @@
     "and": "i",
     "feedback": {
       "action": "Podziel się opinią",
-      "desc": "Każdy twój pomysł i sugestia są dla nas bezcenne, nie możemy się doczekać, aby poznać twoją opinię! Skontaktuj się z nami, aby podzielić się opinią na temat funkcji produktu i doświadczeń z jego użytkowania, pomóż nam ulepszyć LobeChat.",
+      "desc": "Każdy twój pomysł i sugestia są dla nas bezcenne, nie możemy się doczekać, aby poznać twoją opinię! Skontaktuj się z nami, aby podzielić się opinią na temat funkcji produktu i doświadczeń z jego użytkowania, pomóż nam ulepszyć 和祐小助手.",
       "title": "Podziel się swoją cenną opinią na GitHubie"
     },
     "later": "Później",
@@ -269,9 +269,9 @@
   "telemetry": {
     "allow": "Zezwalaj",
     "deny": "Odmów",
-    "desc": "Chcemy anonimowo zbierać informacje o twoim użytkowaniu, aby pomóc nam ulepszyć LobeChat i zapewnić ci lepsze doświadczenia z naszym produktem. Możesz wyłączyć to w każdej chwili w „Ustawienia” - „O nas”.",
+    "desc": "Chcemy anonimowo zbierać informacje o twoim użytkowaniu, aby pomóc nam ulepszyć 和祐小助手 i zapewnić ci lepsze doświadczenia z naszym produktem. Możesz wyłączyć to w każdej chwili w „Ustawienia” - „O nas”.",
     "learnMore": "Dowiedz się więcej",
-    "title": "Pomóż LobeChat stawać się lepszym"
+    "title": "Pomóż 和祐小助手 stawać się lepszym"
   },
   "temp": "Tymczasowy",
   "terms": "Warunki korzystania",
