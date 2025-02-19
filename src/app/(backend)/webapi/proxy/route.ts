@@ -6,7 +6,7 @@ import { appEnv } from '@/config/app';
 
 /**
  * just for a proxy
- */
+*/
 export const POST = async (req: Request) => {
   const url = await req.text();
 

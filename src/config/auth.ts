@@ -6,6 +6,7 @@ declare global {
   // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace NodeJS {
     interface ProcessEnv {
+      APP_URL?: string;
       // ===== Clerk ===== //
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY?: string;
       CLERK_SECRET_KEY?: string;
@@ -40,6 +41,11 @@ declare global {
       ZITADEL_CLIENT_ID?: string;
       ZITADEL_CLIENT_SECRET?: string;
       ZITADEL_ISSUER?: string;
+
+      // HY4A
+      HY4A_CLIENT_ID?: string;
+      HY4A_CLIENT_SECRET?: string;
+      HY4A_ISSUER?: string;
     }
   }
 }
@@ -138,6 +144,15 @@ export const getAuthConfig = () => {
   if (process.env.ZITADEL_ISSUER) {
     console.warn(removeTipsTemplate('ZITADEL_ISSUER', 'AUTH_ZITADEL_ISSUER'));
   }
+  if (process.env.HY4A_CLIENT_ID) {
+    console.warn(removeTipsTemplate('HY4A_CLIENT_ID', 'AUTH_HY4A_ID'));
+  }
+  if (process.env.HY4A_CLIENT_SECRET) {
+    console.warn(removeTipsTemplate('HY4A_CLIENT_SECRET', 'AUTH_HY4A_SECRET'));
+  }
+  if (process.env.HY4A_ISSUER) {
+    console.warn(removeTipsTemplate('HY4A_ISSUER', 'AUTH_HY4A_ISSUER'));
+  }
   // End
 
   return createEnv({
@@ -151,6 +166,8 @@ export const getAuthConfig = () => {
       NEXT_PUBLIC_ENABLE_NEXT_AUTH: z.boolean().optional(),
     },
     server: {
+      APP_URL: z.string().optional(),
+
       // Clerk
       CLERK_SECRET_KEY: z.string().optional(),
       CLERK_WEBHOOK_SECRET: z.string().optional(),
@@ -207,9 +224,16 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: z.string().optional(),
+
+      // HY4A
+      HY4A_CLIENT_ID: z.string().optional(),
+      HY4A_CLIENT_SECRET: z.string().optional(),
+      HY4A_ISSUER: z.string().optional(),
     },
 
     runtimeEnv: {
+      APP_URL: process.env.APP_URL,
+
       // Clerk
       NEXT_PUBLIC_ENABLE_CLERK_AUTH: !!process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
       NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY,
@@ -269,6 +293,11 @@ export const getAuthConfig = () => {
 
       // Casdoor
       CASDOOR_WEBHOOK_SECRET: process.env.CASDOOR_WEBHOOK_SECRET,
+
+      // HY4A
+      HY4A_CLIENT_ID: process.env.HY4A_CLIENT_ID,
+      HY4A_CLIENT_SECRET: process.env.HY4A_CLIENT_SECRET,
+      HY4A_ISSUER: process.env.HY4A_ISSUER,
     },
   });
 };

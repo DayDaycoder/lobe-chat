@@ -7,15 +7,17 @@ import { ssoProviders } from './sso-providers';
 export const initSSOProviders = () => {
   return authEnv.NEXT_PUBLIC_ENABLE_NEXT_AUTH
     ? authEnv.NEXT_AUTH_SSO_PROVIDERS.split(/[,，]/).map((provider) => {
-        const validProvider = ssoProviders.find((item) => item.id === provider.trim());
+      const validProvider = ssoProviders.find((item) => item.id === provider.trim());
 
-        if (validProvider) return validProvider.provider;
+      if (validProvider) return validProvider.provider;
 
-        throw new Error(`[NextAuth] provider ${provider} is not supported`);
-      })
+      throw new Error(`[NextAuth] provider ${provider} is not supported`);
+    })
     : [];
 };
-
+const hasHexin = () => {
+  return authEnv.NEXT_AUTH_SSO_PROVIDERS.split(/[,，]/).includes('hexin')
+}
 // Notice this is only an object, not a full Auth.js instance
 export default {
   callbacks: {
@@ -40,9 +42,17 @@ export default {
     },
   },
   debug: authEnv.NEXT_AUTH_DEBUG,
-  pages: {
+  pages: hasHexin() ? {
+
+    error: '/next-auth/error',
+    // signIn: '/hexin/signin', // 自定义登录入口页
+    signIn: '/[variants]/hexin/signin',
+  } : {
     error: '/next-auth/error',
   },
+  // pages: {
+  //   error: '/next-auth/error',
+  // },
   providers: initSSOProviders(),
   secret: authEnv.NEXT_AUTH_SECRET,
   trustHost: process.env?.AUTH_TRUST_HOST ? process.env.AUTH_TRUST_HOST === 'true' : true,
