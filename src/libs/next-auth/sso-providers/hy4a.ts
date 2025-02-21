@@ -28,12 +28,12 @@ const provider = {
     profile(profile: any) {
       console.log('LobeHy4aProvider profile', profile);
       return {
-        email: profile.email,
+        email: `${profile.uid}@hyhospital.com`,
         emailVerified: profile.emailVerified ? new Date() : null,
-        id: profile.id,
+        id: profile.uid,
         image: profile.avatar,
         name: profile.displayName ?? profile.firstName ?? profile.lastName,
-        providerAccountId: profile.id,
+        providerAccountId: profile.uid,
       };
     },
 

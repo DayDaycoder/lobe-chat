@@ -45,7 +45,7 @@ export class AssistantStore {
         return [];
       }
 
-      const data: AgentStoreIndex = await res.json();
+      let data: AgentStoreIndex = await res.json();
 
       if (EdgeConfig.isEnabled()) {
         // Get the assistant whitelist from Edge Config
@@ -63,6 +63,11 @@ export class AssistantStore {
           data.agents = data.agents.filter((item) => !blacklist.includes(item.identifier));
         }
       }
+      data.agents = data.agents.sort((a, b) => {
+        if (a.identifier === 'yunchat-docter') return -1;
+        if (b.identifier === 'yunchat-docter') return 1;
+        return 0;
+      });
 
       return data;
     } catch (e) {
