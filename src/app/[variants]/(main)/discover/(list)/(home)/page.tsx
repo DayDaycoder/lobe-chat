@@ -49,7 +49,7 @@ const Page = async (props: DiscoverPageProps) => {
 
   const discoverService = new DiscoverService();
   const assistantList = await discoverService.getAssistantList(locale);
-  const pluginList = await discoverService.getPluginList(locale);
+  // const pluginList = await discoverService.getPluginList(locale);
   const modelList = await discoverService.getModelList(locale);
 
   return (
@@ -58,7 +58,6 @@ const Page = async (props: DiscoverPageProps) => {
       <Client
         assistantList={assistantList.slice(0, 16)}
         modelList={modelList.slice(0, 8)}
-        pluginList={pluginList.slice(0, 8)}
       />
     </>
   );
