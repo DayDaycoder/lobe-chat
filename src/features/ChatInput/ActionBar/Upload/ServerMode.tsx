@@ -1,8 +1,8 @@
 import { ActionIcon, Icon, Tooltip } from '@lobehub/ui';
-import { Dropdown, MenuProps, Upload } from 'antd';
+import { Dropdown, MenuProps, Upload , message } from 'antd';
 import { css, cx } from 'antd-style';
 import { FileUp, FolderUp, ImageUp, Paperclip } from 'lucide-react';
-import { memo } from 'react';
+import { memo, useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 
 import { useModelSupportVision } from '@/hooks/useModelSupportVision';
@@ -19,15 +19,41 @@ const hotArea = css`
   }
 `;
 
+const parseCookies = () => {
+  if (typeof document === 'undefined') return {};
+  const cookies: Record<string, string> = {};
+  document.cookie
+    .split('; ')
+    .filter((item) => item.trim() !== '')
+    .forEach((item) => {
+      const [key, value] = item.split('=');
+      cookies[key] = decodeURIComponent(value || '');
+    });
+  return cookies;
+};
+
 const FileUpload = memo(() => {
   const { t } = useTranslation('chat');
+  const [hasCookie, setHasCookie] = useState(false);
+
+  useEffect(() => {
+    console.log('document.cookie', document.cookie);
+    const cookieObj = parseCookies();
+
+    if (cookieObj.chatToken) {
+      setHasCookie(!!cookieObj.chatToken);
+    }
+  }, []);
 
   const upload = useFileStore((s) => s.uploadChatFiles);
 
   const model = useAgentStore(agentSelectors.currentAgentModel);
   const provider = useAgentStore(agentSelectors.currentAgentModelProvider);
 
-  const canUploadImage = useModelSupportVision(model, provider);
+  // 服务端能计算的部分
+  const serverSideCheck = useModelSupportVision(model, provider);
+  // 最终条件 = 服务端条件 + 客户端条件
+  const canUploadImage = serverSideCheck && !hasCookie;
 
   const items: MenuProps['items'] = [
     {
@@ -52,6 +78,9 @@ const FileUpload = memo(() => {
           <div className={cx(hotArea)}>{t('upload.action.imageUpload')}</div>
         </Tooltip>
       ),
+      style: {
+        display: canUploadImage ? 'block' : 'none',
+      },
     },
     {
       icon: <Icon icon={FileUp} style={{ fontSize: '16px' }} />,
@@ -59,7 +88,10 @@ const FileUpload = memo(() => {
       label: (
         <Upload
           beforeUpload={async (file) => {
-            if (!canUploadImage && file.type.startsWith('image')) return false;
+            if (!canUploadImage && file.type.startsWith('image')) {
+              message.error('不支持上传图片'); // 显示错误提示
+              return false;
+            } 
 
             await upload([file]);
 
@@ -78,7 +110,10 @@ const FileUpload = memo(() => {
       label: (
         <Upload
           beforeUpload={async (file) => {
-            if (!canUploadImage && file.type.startsWith('image')) return false;
+            if (!canUploadImage && file.type.startsWith('image')) {
+              message.error('不支持上传图片'); // 显示错误提示
+              return false;
+            } 
 
             await upload([file]);
 

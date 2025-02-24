@@ -1,4 +1,4 @@
-import dayjs from 'dayjs';
+// import dayjs from 'dayjs';
 import matter from 'gray-matter';
 import { template } from 'lodash-es';
 import { markdownToTxt } from 'markdown-to-txt';
@@ -48,28 +48,30 @@ export class ChangelogService {
   }
 
   async getChangelogIndex(): Promise<ChangelogIndexItem[]> {
-    try {
-      const url = this.genUrl(urlJoin(this.config.docsPath, 'index.json'));
+    return []
+    // try {
+    //   // const url = this.genUrl(urlJoin(this.config.docsPath, 'index.json'));
 
-      const res = await fetch(url, {
-        next: { revalidate: 3600, tags: [FetchCacheTag.Changelog] },
-      });
+    //   // const res = await fetch(url, {
+    //   //   next: { revalidate: 3600, tags: [FetchCacheTag.Changelog] },
+    //   // });
 
-      const data = await res.json();
+    //   // const data = await res.json();
 
-      return this.mergeChangelogs(data.cloud, data.community).slice(0, 5);
-    } catch (e) {
-      const cause = (e as Error).cause as { code: string };
-      if (cause?.code.includes('ETIMEDOUT')) {
-        console.warn(
-          '[ChangelogFetchTimeout] fail to fetch changelog lists due to network timeout. Please check your network connection.',
-        );
-      } else {
-        console.error('Error getting changelog lists:', e);
-      }
+    //   // return this.mergeChangelogs(data.cloud, data.community).slice(0, 5);
+    //   return []
+    // } catch (e) {
+    //   const cause = (e as Error).cause as { code: string };
+    //   if (cause?.code.includes('ETIMEDOUT')) {
+    //     console.warn(
+    //       '[ChangelogFetchTimeout] fail to fetch changelog lists due to network timeout. Please check your network connection.',
+    //     );
+    //   } else {
+    //     console.error('Error getting changelog lists:', e);
+    //   }
 
-      return [];
-    }
+    //   return [];
+    // }
   }
 
   async getIndexItemById(id: string) {
@@ -139,33 +141,33 @@ export class ChangelogService {
     }
   }
 
-  private mergeChangelogs(
-    cloud: ChangelogIndexItem[],
-    community: ChangelogIndexItem[],
-  ): ChangelogIndexItem[] {
-    if (this.config.type === 'community') {
-      return community;
-    }
+  // private mergeChangelogs(
+  //   cloud: ChangelogIndexItem[],
+  //   community: ChangelogIndexItem[],
+  // ): ChangelogIndexItem[] {
+  //   if (this.config.type === 'community') {
+  //     return community;
+  //   }
 
-    const merged = [...community];
+  //   const merged = [...community];
 
-    for (const cloudItem of cloud) {
-      const index = merged.findIndex((item) => item.id === cloudItem.id);
-      if (index !== -1) {
-        merged[index] = cloudItem;
-      } else {
-        merged.push(cloudItem);
-      }
-    }
+  //   for (const cloudItem of cloud) {
+  //     const index = merged.findIndex((item) => item.id === cloudItem.id);
+  //     if (index !== -1) {
+  //       merged[index] = cloudItem;
+  //     } else {
+  //       merged.push(cloudItem);
+  //     }
+  //   }
 
-    return merged
-      .map((item) => ({
-        ...item,
-        date: dayjs(item.date).format('YYYY-MM-DD'),
-        versionRange: this.formatVersionRange(item.versionRange),
-      }))
-      .sort((a, b) => semver.rcompare(a.versionRange[0], b.versionRange[0]));
-  }
+  //   return merged
+  //     .map((item) => ({
+  //       ...item,
+  //       date: dayjs(item.date).format('YYYY-MM-DD'),
+  //       versionRange: this.formatVersionRange(item.versionRange),
+  //     }))
+  //     .sort((a, b) => semver.rcompare(a.versionRange[0], b.versionRange[0]));
+  // }
 
   private formatVersionRange(range: string[]): string[] {
     if (range.length === 1) {
