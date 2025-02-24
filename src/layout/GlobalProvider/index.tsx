@@ -1,18 +1,15 @@
-import { ReactNode, Suspense } from 'react';
+import { ReactNode } from 'react';
 
 import { appEnv } from '@/config/app';
 import { getServerFeatureFlagsValue } from '@/config/featureFlags';
-import DevPanel from '@/features/DevPanel';
 import { getServerGlobalConfig } from '@/server/globalConfig';
 import { ServerConfigStoreProvider } from '@/store/serverConfig/Provider';
 import { getAntdLocale } from '@/utils/locale';
 
 import AntdV5MonkeyPatch from './AntdV5MonkeyPatch';
 import AppTheme from './AppTheme';
-import ImportSettings from './ImportSettings';
 import Locale from './Locale';
 import QueryProvider from './Query';
-import ReactScan from './ReactScan';
 import StoreInitialization from './StoreInitialization';
 import StyleRegistry from './StyleRegistry';
 
@@ -56,11 +53,7 @@ const GlobalLayout = async ({
           >
             <QueryProvider>{children}</QueryProvider>
             <StoreInitialization />
-            <Suspense>
-              <ImportSettings />
-              <ReactScan />
-              {process.env.NODE_ENV === 'development' && <DevPanel />}
-            </Suspense>
+
           </ServerConfigStoreProvider>
         </AppTheme>
         <AntdV5MonkeyPatch />
