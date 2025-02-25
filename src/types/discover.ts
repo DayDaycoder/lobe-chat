@@ -177,3 +177,7 @@ export interface AgentStoreIndex {
   agents: AgentIndexItem[];
   schemaVersion: number;
 }
+
+export interface AgentSortIndex {
+  agentsIndex: string[];
+}

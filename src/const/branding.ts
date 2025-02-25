@@ -5,7 +5,9 @@
 export const LOBE_CHAT_CLOUD = '和祐小助手 Cloud';
 
 export const BRANDING_NAME = '和祐小助手';
-export const BRANDING_LOGO_URL = '/icons/icon-192x192.png';
+// export const BRANDING_LOGO_URL = '/icons/icon-192x192.png';
+
+export const BRANDING_LOGO_URL = '';
 
 export const ORG_NAME = '和祐小助手Hub';
 
