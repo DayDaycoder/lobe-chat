@@ -1,7 +1,7 @@
 import { Icon } from '@lobehub/ui';
 import { App, Button, Checkbox, Skeleton } from 'antd';
 import { createStyles } from 'antd-style';
-import { BookMinusIcon, BookPlusIcon, FileBoxIcon, Trash2Icon } from 'lucide-react';
+import { FileBoxIcon, Trash2Icon } from 'lucide-react';
 import { rgba } from 'polished';
 import { memo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -27,7 +27,6 @@ export type MultiSelectActionType =
   | 'addToOtherKnowledgeBase';
 
 interface MultiSelectActionsProps {
-  isInKnowledgeBase?: boolean;
   onActionClick: (type: MultiSelectActionType) => Promise<void>;
   onClickCheckbox: () => void;
   selectCount: number;
@@ -35,7 +34,7 @@ interface MultiSelectActionsProps {
 }
 
 const MultiSelectActions = memo<MultiSelectActionsProps>(
-  ({ selectCount, isInKnowledgeBase, total, onActionClick, onClickCheckbox }) => {
+  ({ selectCount, total, onActionClick, onClickCheckbox }) => {
     const { t } = useTranslation(['components', 'common']);
     const { styles } = useStyles();
 
@@ -71,49 +70,6 @@ const MultiSelectActions = memo<MultiSelectActionsProps>(
         </Flexbox>
         {isSelectedFiles && (
           <Flexbox gap={8} horizontal>
-            {isInKnowledgeBase ? (
-              <>
-                <Button
-                  icon={<Icon icon={BookMinusIcon} />}
-                  onClick={() => {
-                    modal.confirm({
-                      okButtonProps: {
-                        danger: true,
-                      },
-                      onOk: async () => {
-                        await onActionClick('removeFromKnowledgeBase');
-                        message.success(t('FileManager.actions.removeFromKnowledgeBaseSuccess'));
-                      },
-                      title: t('FileManager.actions.confirmRemoveFromKnowledgeBase', {
-                        count: selectCount,
-                      }),
-                    });
-                  }}
-                  size={'small'}
-                >
-                  {t('FileManager.actions.removeFromKnowledgeBase')}
-                </Button>
-                <Button
-                  icon={<Icon icon={BookPlusIcon} />}
-                  onClick={() => {
-                    onActionClick('addToOtherKnowledgeBase');
-                  }}
-                  size={'small'}
-                >
-                  {t('FileManager.actions.addToOtherKnowledgeBase')}
-                </Button>
-              </>
-            ) : (
-              <Button
-                icon={<Icon icon={BookPlusIcon} />}
-                onClick={() => {
-                  onActionClick('addToKnowledgeBase');
-                }}
-                size={'small'}
-              >
-                {t('FileManager.actions.addToKnowledgeBase')}
-              </Button>
-            )}
             <Button
               icon={<Icon icon={FileBoxIcon} />}
               onClick={async () => {

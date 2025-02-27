@@ -44,9 +44,22 @@ export class AssistantStore {
         console.warn('fetch agent index error:', await res.text());
         return [];
       }
-      let resindexData = await fetch('https://chat.hyhospital.com:3210/public/data/agentsIndex.json');
+      // let resindexData = await fetch('https://chat.hyhospital.com:3210/public/data/agentsIndex.json');
+      // let resindexData = {
+      //   "agentsIndex": [
+      //     "yunchat-docter",
+      //     "cloze-exercise-generator"
+      //   ]
+      // };
 
-      let indexData: AgentSortIndex = await resindexData.json();
+      let indexData: AgentSortIndex = {
+        "agentsIndex": [
+          "yunchat-docter",
+          "multi-language-2-chinese-or-reverse",
+          "excel-formula-master",
+          "ophthalmologist"
+        ]
+      };
 
       let data: AgentStoreIndex = await res.json();
 
@@ -69,16 +82,16 @@ export class AssistantStore {
       data.agents = data.agents.sort((a, b) => {
         const indexA = indexData.agentsIndex.indexOf(a.identifier);
         const indexB = indexData.agentsIndex.indexOf(b.identifier);
-      
+
         // 如果 a 在 agentsIndex 中，b 不在，a 应该排在前面
         if (indexA !== -1 && indexB === -1) return -1;
-        
+
         // 如果 b 在 agentsIndex 中，a 不在，b 应该排在前面
         if (indexB !== -1 && indexA === -1) return 1;
-        
+
         // 如果都在 agentsIndex 中，按照 agentsIndex 的顺序排序
         if (indexA !== -1 && indexB !== -1) return indexA - indexB;
-        
+
         // 如果都不在 agentsIndex 中，保持原有顺序
         return 0;
       });

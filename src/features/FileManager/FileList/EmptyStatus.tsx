@@ -1,11 +1,10 @@
 import { FileTypeIcon, Icon } from '@lobehub/ui';
 import { Typography, Upload } from 'antd';
 import { createStyles, useTheme } from 'antd-style';
-import { ArrowUpIcon, PlusIcon } from 'lucide-react';
+import { ArrowUpIcon } from 'lucide-react';
 import { useTranslation } from 'react-i18next';
 import { Center, Flexbox } from 'react-layout-kit';
 
-import { useCreateNewModal } from '@/features/KnowledgeBaseModal';
 import { useFileStore } from '@/store/file';
 
 const ICON_SIZE = 80;
@@ -62,16 +61,13 @@ const useStyles = createStyles(({ css, token }) => ({
 
 interface EmptyStatusProps {
   knowledgeBaseId?: string;
-  showKnowledgeBase: boolean;
 }
-const EmptyStatus = ({ showKnowledgeBase, knowledgeBaseId }: EmptyStatusProps) => {
+const EmptyStatus = ({ knowledgeBaseId }: EmptyStatusProps) => {
   const { t } = useTranslation('components');
   const theme = useTheme();
   const { styles } = useStyles();
 
   const pushDockFileList = useFileStore((s) => s.pushDockFileList);
-
-  const { open } = useCreateNewModal();
 
   return (
     <Center gap={24} height={'100%'} style={{ paddingBottom: 100 }} width={'100%'}>
@@ -80,27 +76,6 @@ const EmptyStatus = ({ showKnowledgeBase, knowledgeBaseId }: EmptyStatusProps) =
         <Typography.Text type={'secondary'}>{t('FileManager.emptyStatus.or')}</Typography.Text>
       </Flexbox>
       <Flexbox gap={12} horizontal>
-        {showKnowledgeBase && (
-          <Flexbox
-            className={styles.card}
-            onClick={() => {
-              open();
-            }}
-            padding={16}
-          >
-            <span className={styles.actionTitle}>
-              {t('FileManager.emptyStatus.actions.knowledgeBase')}
-            </span>
-            <div className={styles.glow} style={{ background: theme.purple }} />
-            <FileTypeIcon
-              className={styles.icon}
-              color={theme.purple}
-              icon={<Icon color={'#fff'} icon={PlusIcon} />}
-              size={ICON_SIZE}
-              type={'folder'}
-            />
-          </Flexbox>
-        )}
         <Upload
           beforeUpload={async (file) => {
             await pushDockFileList([file], knowledgeBaseId);

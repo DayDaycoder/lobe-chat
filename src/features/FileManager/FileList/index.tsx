@@ -74,7 +74,7 @@ const FileList = memo<FileListProps>(({ knowledgeBaseId, category }) => {
   useCheckTaskStatus(data);
 
   return !isLoading && data?.length === 0 ? (
-    <EmptyStatus knowledgeBaseId={knowledgeBaseId} showKnowledgeBase={!knowledgeBaseId} />
+    <EmptyStatus knowledgeBaseId={knowledgeBaseId} />
   ) : (
     <Flexbox height={'100%'}>
       <Flexbox style={{ fontSize: 12, marginInline: 24 }}>
