@@ -28,7 +28,7 @@ If you don't have it, please run \`openssl rand -base64 32\` to create one.
   }
 
   if (serverDBEnv.DATABASE_DRIVER === 'node') {
-    const client = new NodePool({ connectionString });
+    const client = new NodePool({ connectionString, max: 100, min: 50 });
     return nodeDrizzle(client, { schema });
   }
 
