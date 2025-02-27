@@ -7,6 +7,7 @@ const RenderActionList = ({ dataSource }: { dataSource: ActionKeys[] }) => (
   <>
     {dataSource.map((key) => {
       const Render = actionMap[key];
+      if(key === 'knowledgeBase') return ''
       return <Render key={key} />;
     })}
   </>

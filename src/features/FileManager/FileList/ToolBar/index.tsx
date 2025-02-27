@@ -99,11 +99,9 @@ const ToolBar = memo<MultiSelectActionsProps>(
       }
     };
 
-    const isInKnowledgeBase = !!knowledgeBaseId;
     return (
       <Flexbox align={'center'} className={styles.container} horizontal justify={'space-between'}>
         <MultiSelectActions
-          isInKnowledgeBase={isInKnowledgeBase}
           onActionClick={onActionClick}
           onClickCheckbox={() => {
             setSelectedFileIds(selectCount === total ? [] : totalFileIds);
