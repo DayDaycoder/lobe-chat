@@ -4,6 +4,24 @@ import { ModelProviderCard } from '@/types/llm';
 const OpenAI: ModelProviderCard = {
   chatModels: [
     {
+      contextWindowTokens: 200_000,
+      description:
+        'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
+      displayName: 'Claude 3.5 Sonnet',
+      enabled: true,
+      functionCall: true,
+      id: 'claude-3-5-sonnet-20241022',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.3,
+        input: 3,
+        output: 15,
+        writeCacheInput: 3.75,
+      },
+      releasedAt: '2024-10-22',
+      vision: false,
+    },
+    {
       contextWindowTokens: 128_000,
       description:
         'o1-mini是一款针对编程、数学和科学应用场景而设计的快速、经济高效的推理模型。该模型具有128K上下文和2023年10月的知识截止日期。',
@@ -59,7 +77,7 @@ const OpenAI: ModelProviderCard = {
         input: 0.15,
         output: 0.6,
       },
-      vision: true,
+      vision: false,
     },
     {
       contextWindowTokens: 128_000,
@@ -88,7 +106,7 @@ const OpenAI: ModelProviderCard = {
         input: 2.5,
         output: 10,
       },
-      vision: true,
+      vision: false,
     },
     {
       contextWindowTokens: 128_000,
