@@ -6,6 +6,23 @@ const OpenAI: ModelProviderCard = {
     {
       contextWindowTokens: 200_000,
       description:
+        'Claude 3.7 sonnet 是 Anthropic 最快的下一代模型。与 Claude 3 Haiku 相比，Claude 3.7 Sonnet 在各项技能上都有所提升，并在许多智力基准测试中超越了上一代最大的模型 Claude 3 Opus。',
+      displayName: 'Claude 3.7 Sonnet',
+      enabled: true,
+      functionCall: true,
+      id: 'claude-3-7-sonnet-20250219',
+      maxOutput: 8192,
+      pricing: {
+        cachedInput: 0.1,
+        input: 1,
+        output: 5,
+        writeCacheInput: 1.25,
+      },
+      releasedAt: '2025-02-24',
+    },
+    {
+      contextWindowTokens: 200_000,
+      description:
         'Claude 3.5 Sonnet 提供了超越 Opus 的能力和比 Sonnet 更快的速度，同时保持与 Sonnet 相同的价格。Sonnet 特别擅长编程、数据科学、视觉处理、代理任务。',
       displayName: 'Claude 3.5 Sonnet',
       enabled: true,
